@@ -4,8 +4,9 @@ import type { User } from '../UserInfo';
 export type Todo = {
   id: number;
   title: string;
-  user: User;
+  userId: number;
   completed: boolean;
+  user: User;
 };
 
 type Props = {

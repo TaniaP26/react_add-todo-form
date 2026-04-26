@@ -4,6 +4,7 @@ import usersFromServer from './api/users';
 import todosFromServer from './api/todos';
 import { useState } from 'react';
 import type { Todo } from './components/TodoInfo';
+import users from './api/users';
 
 function getNewTodosId(todoList: Todo[]) {
   const maxId = Math.max(...todoList.map(todo => todo.id), 0);
@@ -15,44 +16,42 @@ export const App = () => {
   const [title, setTitle] = useState('Please enter a title');
   const [userId, setUserId] = useState(0);
   const [todoList, setTodoList] = useState<Todo[]>(todosFromServer);
-  const [error, setError] = useState('');
-  const [success, setSuccess] = useState('');
+  // const [error, setError] = useState('');
+  // const [success, setSuccess] = useState('');
+  const [titleError, setTitleError] = useState(false);
+  const [userError, setUserError] = useState(false);
 
   const addTodo = (event: React.FormEvent) => {
     event.preventDefault();
 
-    setError('');
-    setSuccess('');
+    let hasError = false;
 
-    // ❗ валідація
-    if (!title || title === 'Please enter a title') {
-      setError('Please enter a title');
-
-      return;
+    if (!title.trim()) {
+      setTitleError(true);
+      hasError = true;
     }
 
     if (userId === 0) {
-      setError('Please choose a user');
-
-      return;
+      setUserError(true);
+      hasError = true;
     }
 
-    const user = usersFromServer.find(u => u.id === userId);
+    if (hasError) return;
+
+    const user = usersFromServer.find(user1 => user1.id === userId);
 
     const newTodo: Todo = {
       id: getNewTodosId(todoList),
       title,
       completed: false,
       user,
+      userId,
     };
 
     setTodoList(prev => [...prev, newTodo]);
 
-    // ✅ повертаємо до початкового стану
     setTitle('Please enter a title');
     setUserId(0);
-
-    setSuccess('Todo added successfully');
   };
 
   return (
@@ -66,8 +65,12 @@ export const App = () => {
           <input
             type="text"
             id="title-id"
+            data-cy="titleInput"
             value={title}
-            onChange={event => setTitle(event.target.value)}
+            onChange={event => {
+              setTitle(event.target.value);
+              setTitleError(false);
+            }}
           />
         </div>
 
@@ -76,8 +79,12 @@ export const App = () => {
 
           <select
             id="user-id"
+            data-cy="userSelect"
             value={userId}
-            onChange={event => setUserId(+event.target.value)}
+            onChange={event => {
+              setUserId(+event.target.value);
+              setUserError(false);
+            }}
           >
             <option value="0" disabled>
               Choose a user
@@ -91,8 +98,8 @@ export const App = () => {
           </select>
         </div>
 
-        {error && <span className="error">{error}</span>}
-        {success && <span className="success">{success}</span>}
+        {titleError && <span className="error">Please enter a title</span>}
+        {userError && <span className="error">Please choose a user</span>}
 
         <button type="submit">Add</button>
       </form>
