@@ -4,7 +4,6 @@ import usersFromServer from './api/users';
 import todosFromServer from './api/todos';
 import { useState } from 'react';
 import type { Todo } from './components/TodoInfo';
-// import users from './api/users';
 
 function getNewTodosId(todoList: Todo[]) {
   const maxId = Math.max(...todoList.map(todo => todo.id), 0);
@@ -13,11 +12,9 @@ function getNewTodosId(todoList: Todo[]) {
 }
 
 export const App = () => {
-  const [title, setTitle] = useState('Please enter a title');
+  const [title, setTitle] = useState('');
   const [userId, setUserId] = useState(0);
   const [todoList, setTodoList] = useState<Todo[]>(todosFromServer);
-  // const [error, setError] = useState('');
-  // const [success, setSuccess] = useState('');
   const [titleError, setTitleError] = useState(false);
   const [userError, setUserError] = useState(false);
 
@@ -52,7 +49,7 @@ export const App = () => {
 
     setTodoList(prev => [...prev, newTodo]);
 
-    setTitle('Please enter a title');
+    setTitle('');
     setUserId(0);
   };
 
@@ -69,6 +66,7 @@ export const App = () => {
             id="title-id"
             data-cy="titleInput"
             value={title}
+            placeholder="Please enter a title"
             onChange={event => {
               setTitle(event.target.value);
               setTitleError(false);
