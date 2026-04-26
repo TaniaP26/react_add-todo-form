@@ -4,7 +4,7 @@ import usersFromServer from './api/users';
 import todosFromServer from './api/todos';
 import { useState } from 'react';
 import type { Todo } from './components/TodoInfo';
-import users from './api/users';
+// import users from './api/users';
 
 function getNewTodosId(todoList: Todo[]) {
   const maxId = Math.max(...todoList.map(todo => todo.id), 0);
@@ -36,7 +36,9 @@ export const App = () => {
       hasError = true;
     }
 
-    if (hasError) return;
+    if (hasError) {
+      return;
+    }
 
     const user = usersFromServer.find(user1 => user1.id === userId);
 
