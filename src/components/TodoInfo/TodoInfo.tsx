@@ -11,6 +11,7 @@ export type Todo = {
 
 type Props = {
   todo: Todo;
+  // user: User;
 };
 
 export const TodoInfo = ({ todo }: Props) => {
@@ -22,8 +23,9 @@ export const TodoInfo = ({ todo }: Props) => {
       className={`TodoInfo ${completed ? 'TodoInfo--completed' : ''}`}
     >
       <h2 className="TodoInfo__title">{title}</h2>
+      <UserInfo user={user} />
 
-      <UserInfo {...user} />
+      {/* <UserInfo {...user} /> */}
     </article>
   );
 };

@@ -11,10 +11,19 @@ function getNewTodosId(todoList: Todo[]) {
   return maxId + 1;
 }
 
+function getUserById(userId: number) {
+  return usersFromServer.find(user => user.id === userId) || null;
+}
+
 export const App = () => {
   const [title, setTitle] = useState('');
   const [userId, setUserId] = useState(0);
-  const [todoList, setTodoList] = useState<Todo[]>(todosFromServer);
+  const [todoList, setTodoList] = useState<Todo[]>(
+    todosFromServer.map(todo => ({
+      ...todo,
+      user: usersFromServer.find(user => user.id === todo.userId)!,
+    })),
+  );
   const [titleError, setTitleError] = useState(false);
   const [userError, setUserError] = useState(false);
 
@@ -37,7 +46,9 @@ export const App = () => {
       return;
     }
 
-    const user = usersFromServer.find(user1 => user1.id === userId);
+    // const user = usersFromServer.find(user1 => user1.id === userId);
+
+    const user = getUserById(userId)!;
 
     const newTodo: Todo = {
       id: getNewTodosId(todoList),
@@ -101,7 +112,9 @@ export const App = () => {
         {titleError && <span className="error">Please enter a title</span>}
         {userError && <span className="error">Please choose a user</span>}
 
-        <button type="submit">Add</button>
+        <button data-cy="submitButton" type="submit">
+          Add
+        </button>
       </form>
 
       <TodoList todos={todoList} />

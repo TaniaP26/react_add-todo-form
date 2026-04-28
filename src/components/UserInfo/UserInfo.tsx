@@ -5,8 +5,16 @@ export type User = {
   email: string;
 };
 
-export const UserInfo = (user: User) => (
-  <a className="UserInfo" href={`mailto:${user.email}`}>
-    {user.name}
-  </a>
-);
+type Props = {
+  user: User;
+};
+
+export const UserInfo = ({ user }: Props) => {
+  const { name, email } = user;
+
+  return (
+    <a className="UserInfo" href={`mailto:${email}`}>
+      {name}
+    </a>
+  );
+};
